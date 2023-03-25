@@ -5,7 +5,7 @@ const techdata = [
     title: 'Hardware',
     author: 'Mason',
     gallery_id: 1,
-    filename: 'hardware.png',
+    filename: 'hardware.jpg',
     description:
       'hardware discussion',
   },
@@ -20,14 +20,14 @@ const techdata = [
     title: 'Javascript',
     author: 'Mason',
     gallery_id: 3,
-    filename: 'JavaScript.png',
+    filename: 'JavaScript.jpg',
     description: 'javascript discussion',
   },
   {
     title: 'C++',
     author: 'Mason',
     gallery_id: 4,
-    filename: 'c++.png',
+    filename: 'c++.jpg',
     description: 'c++ discussion',
   }
 ];
