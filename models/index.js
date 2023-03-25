@@ -1,6 +1,6 @@
 const User = require('./User');
 const Gallery = require('./Gallery');
-const Tech = require('./Book');
+const Tech = require('./Tech');
 const Comment = require('./Comment');
 
 User.hasMany(Comment, {
@@ -15,15 +15,15 @@ Comment.belongsTo(Tech, {
   foreignKey: 'tech_id',
 });
 
-Book.hasMany(Comment, {
+Tech.hasMany(Comment, {
   foreignKey: 'tech_id',
 });
 
-Gallery.hasMany(Book, {
+Gallery.hasMany(Tech, {
   foreignKey: 'gallery_id',
 });
 
-Book.belongsTo(Gallery, {
+Tech.belongsTo(Gallery, {
   foreignKey: 'gallery_id',
 });
 
