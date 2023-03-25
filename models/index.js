@@ -1,66 +1,31 @@
-const User = require("./User");
-const Post = require("./Post");
-const Comment = require("./Comment");
-const Vote = require("./Vote");
+const User = require('./User');
+const Gallery = require('./Gallery');
+const Tech = require('./Book');
+const Comment = require('./Comment');
 
-User.hasMany(Post, {
-  foreignKey: "user_id",
-});
-
-Post.belongsTo(User, {
-  foreignKey: "user_id",
-  onDelete: "SET NULL",
-});
-
-User.belongsToMany(Post, {
-  through: Vote,
-  as: "voted_posts",
-  foreignKey: "user_id",
-  onDelete: "SET NULL",
-});
-
-Post.belongsToMany(User, {
-  through: Vote,
-  as: "voted_posts",
-  foreignKey: "post_id",
-  onDelete: "SET NULL",
-});
-
-Vote.belongsTo(User, {
-  foreignKey: "user_id",
-  onDelete: "SET NULL",
-});
-
-Vote.belongsTo(Post, {
-  foreignKey: "post_id",
-  onDelete: "SET NULL",
-});
-
-User.hasMany(Vote, {
-  foreignKey: "user_id",
-});
-
-Post.hasMany(Vote, {
-  foreignKey: "post_id",
+User.hasMany(Comment, {
+  foreignKey: 'user_id',
 });
 
 Comment.belongsTo(User, {
-  foreign_key: "user_id",
-  onDelete: "SET NULL",
+  foreignKey: 'user_id',
 });
 
-Comment.belongsTo(Post, {
-  foreignKEy: "post_id",
-  onDelete: "SET NULL",
+Comment.belongsTo(Tech, {
+  foreignKey: 'tech_id',
 });
 
-User.hasMany(Comment, {
-  foreignKey: "user_id",
-  onDelete: "SET NULL",
+Book.hasMany(Comment, {
+  foreignKey: 'tech_id',
 });
 
-Post.hasMany(Comment, {
-  foreignKey: "post_id",
+Gallery.hasMany(Book, {
+  foreignKey: 'gallery_id',
 });
 
-module.exports = { User, Post, Comment, Vote };
+Book.belongsTo(Gallery, {
+  foreignKey: 'gallery_id',
+});
+
+
+module.exports = { User, Gallery, Tech, Comment };

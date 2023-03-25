@@ -1,109 +1,87 @@
-const router = require("express").Router();
+const router = require('express').Router();
+const { Gallery, Tech, User, Comment } = require('../models');
+const withAuth = require('../utils/auth');
 
-const sequelize = require("../config/connection");
-const { Post, User, Comment} = require("../models");
-
-router.get("/", (req, res) => {
-  console.log("======================");
-  Post.findAll({
-    attributes: [
-      "id",
-      "post_url",
-      "title",
-      "created_at",
-      [
-        sequelize.literal(
-          "(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)"
-        ),
-        "vote_count",
-      ],
-    ],
-    include: [
-      {
-        model: Comment,
-        attributes: ["id", "comment_text", "post_id", "user_id", "created_at"],
-        include: {
-          model: User,
-          attributes: ["username"],
+router.get('/', async (req, res) => {
+  try {
+    const dbGalleryData = await Gallery.findAll({
+      include: [
+        {
+          model: Tech,
+          attributes: ['filename', 'description'],
         },
-      },
-      {
-        model: User,
-        attributes: ["username"],
-      },
-    ],
-  })
-    .then((dbPostData) => {
-      const posts = dbPostData.map((post) => post.get({ plain: true }));
-      console.log(posts);
-      res.render("homepage", {
-        posts,
-        loggedIn: req.session.loggedIn,
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json(err);
+      ],
     });
+
+    const galleries = dbGalleryData.map((gallery) =>
+      gallery.get({ plain: true })
+    );
+
+    res.render('homepage', {
+      galleries,
+      loggedIn: req.session.loggedIn,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
-router.get("/login", (req, res) => {
-  if (req.session?.loggedIn) {
-    res.redirect("/");
+router.get('/gallery/:id', withAuth, async (req, res) => {
+  try {
+    const dbGalleryData = await Gallery.findByPk(req.params.id, {
+      include: [
+        {
+          model: Tech,
+          attributes: [
+            'id',
+            'title',
+            'author',
+            'filename',
+            'description',
+          ],
+        },
+      ],
+    });
+
+    const gallery = dbGalleryData.get({ plain: true });
+    res.render('gallery', { gallery, loggedIn: req.session.loggedIn });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+router.get('/tech/:id', withAuth, async (req, res) => {
+  try {
+    const dbTechData = await Tech.findByPk(req.params.id, {
+      include: [
+        {
+          model: Comment,
+          attributes: ['id', 'comment_text', 'tech_id', 'user_id'],
+          include: {
+            model: User,
+            attributes: ['username']
+          }
+        }
+      ]
+    });
+    const tech = dbTechData.get({ plain: true });
+    res.render('book', { tech, loggedIn: req.session.loggedIn });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+
+router.get('/login', (req, res) => {
+  if (req.session.loggedIn) {
+    res.redirect('/');
     return;
   }
-  res.render("login");
-});
 
-router.get("/post/:id", (req, res) => {
-  Post.findOne({
-    where: {
-      id: req.params.id,
-    },
-    attributes: [
-      "id",
-      "post_url",
-      "title",
-      "created_at",
-      [
-        sequelize.literal(
-          "(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)"
-        ),
-        "vote_count",
-      ],
-    ],
-    include: [
-      {
-        model: Comment,
-        attributes: ["id", "comment_text", "post_id", "user_id", "created_at"],
-        include: {
-          model: User,
-          attributes: ["username"],
-        },
-      },
-      {
-        model: User,
-        attributes: ["username"],
-      },
-    ],
-  })
-    .then((dbPostData) => {
-      if (!dbPostData) {
-        res.status(404).json({ message: "No post found with this id" });
-        return;
-      }
-
-      const post = dbPostData.get({ plain: true });
-
-      res.render("single-post", {
-        post,
-        loggedIn: req.session.loggedIn,
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json(err);
-    });
+  res.render('login');
 });
 
 module.exports = router;

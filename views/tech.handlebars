@@ -1,0 +1,25 @@
+<section class="tech">
+  <img src="/images/{{tech.filename}}" alt="{{tech.description}}">
+  <div class="tech-details">
+    <h3>{{tech.title}}</h3>
+    <p>By: {{tech.author}}</p>
+  </div>
+</section>
+
+{{#if loggedIn}}
+<form class="comment-form">
+  <div>
+    <label for="comment">Write a Comment:</label>
+    <input class="form-input" name="comment-body" id="new-comment"/>
+  </div>
+  <div>
+    <button type="submit">Add Comment</button>
+  </div>
+</form>
+{{/if}}
+
+{{> comments tech.comments}}
+
+{{#if loggedIn}}
+<script src="/js/comment.js"></script>
+{{/if}}
