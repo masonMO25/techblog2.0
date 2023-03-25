@@ -1,6 +1,6 @@
-const { Book } = require('../models');
+const { Tech } = require('../models');
 
-const bookdata = [
+const techdata = [
   {
     title: 'Hardware',
     author: 'Mason',
@@ -32,6 +32,6 @@ const bookdata = [
   }
 ];
 
-const seedBooks = () => Book.bulkCreate(bookdata);
+const seedTech = () => Tech.bulkCreate(techdata);
 
-module.exports = seedBooks;
+module.exports = seedTech;

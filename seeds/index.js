@@ -1,6 +1,6 @@
 const sequelize = require('../config/connection');
 const seedGallery = require('./galleryData');
-const seedTech = require('./bookData');
+const seedTech = require('./techData');
 const seedComment = require('./commentData')
 const seedUser = require('./userData')
 

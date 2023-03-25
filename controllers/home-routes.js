@@ -67,7 +67,7 @@ router.get('/tech/:id', withAuth, async (req, res) => {
       ]
     });
     const tech = dbTechData.get({ plain: true });
-    res.render('book', { tech, loggedIn: req.session.loggedIn });
+    res.render('tech', { tech, loggedIn: req.session.loggedIn });
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
